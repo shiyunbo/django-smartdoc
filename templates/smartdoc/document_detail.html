@@ -1,0 +1,41 @@
+{% extends "smartdoc/base.html" %}
+
+{% block content %}
+<h3>
+  {{ document.title }}
+</h3>
+
+
+<ul>
+    <li>产品名称: {{ document.product.name }}</li>
+    <li>产品代码: {{ document.product.code }}</li>
+    <li>文档类别: {{ document.category.name }}</li>
+    <li>
+            格式大小: {{ document.get_format }}
+            |
+            {{ document.doc_file.size | filesizeformat }}
+    </li>
+    <li> 版本号: {{ document.version_no }}</li>
+     <li> 上传日期: {{ document.create_date | date:"Y-m-d" }}</li>
+    <li> 修改日期: {{ document.mod_date | date:"Y-m-d" }}</li>
+    <li>作者: {{ document.author.username }}</li>
+
+</ul>
+
+<p><span class="glyphicon glyphicon-download"></span> <a href="{{ document.doc_file.url }}">下载文档</a>
+
+{% if request.user.is_authenticated %}
+    {% if request.user == document.author %}
+    | <span class="glyphicon glyphicon-wrench"></span> <a href="{% url 'smartdoc:document_update' document.product.id document.id %}">编辑文档</a>
+    {% endif %}
+{% else %}
+<p>请先<a href="{% url 'account_login' %}?next={% url 'smartdoc:document_detail' document.product.id document.id %}">登录</a>再上传或编辑文档。</p>
+{% endif %}
+
+<p><a href="{% url 'smartdoc:product_list' %}">查看全部产品</a> | <a href="{% url 'smartdoc:category_list' %}">查看全部类别</a>
+| <a href="{% url 'smartdoc:document_list' %}">查看全部文档</a>
+</p>
+
+
+{% endblock %}
+

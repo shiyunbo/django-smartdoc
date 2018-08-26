@@ -1,0 +1,85 @@
+{% extends "smartdoc/base.html" %}
+
+{% block content %}
+<h3>
+  {{ category.name }}
+</h3>
+
+
+{% if category.documents.all %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>标题</th>
+            <th>产品</th>
+             <th>格式</th>
+             <th>大小</th>
+                      <th>版本</th>
+            <th>修改日期</th>
+            <th>用户</th>
+
+            <th>查看</th>
+            <th>下载</th>
+        </tr>
+    </thead>
+    <tbody>
+     {% for document in category.documents.all %}
+        <tr>
+            <td>
+            {{ document.title }}
+            </td>
+            <td>
+            {{ document.product.name }}
+            </td>
+             <td>
+            {{ document.get_format }}
+            </td>
+             <td>
+            {{ document.doc_file.size | filesizeformat }}
+            </td>
+          <td>
+            {{ document.version_no }}
+            </td>
+              <td>
+            {{ document.mod_date | date:"Y-m-d" }}
+            </td>
+               <td>
+            {{ document.author.username }}
+            </td>
+
+             <td>
+                 <a href="{% url 'smartdoc:document_detail' document.product.id document.id %}"><span class="glyphicon glyphicon-eye-open"></span></a>
+            </td>
+
+
+             <td>
+                <a href="{{ document.doc_file.url }}"><span class="glyphicon glyphicon-download"></span></a>
+            </td>
+
+
+     {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<p>对不起，没有文档。</p>
+{% endif %}
+
+{% if request.user.is_authenticated %}
+<p><span class="glyphicon glyphicon-plus"></span> <a href="{% url 'smartdoc:category_create' %}">添加类别</a>
+  {% if request.user == category.author %}
+  | <span class="glyphicon glyphicon-wrench"></span> <a href="{% url 'smartdoc:category_update' category.id %}">编辑类别</a>
+  {% endif %}
+</p>
+
+{% else %}
+<p>请先<a href="{% url 'account_login' %}?next={% url 'smartdoc:category_detail' category.id %}">登录</a>再添加或编辑类别。</p>
+{% endif %}
+
+<p><a href="{% url 'smartdoc:product_list' %}">查看全部产品</a> | <a href="{% url 'smartdoc:category_list' %}">查看全部类别</a>
+| <a href="{% url 'smartdoc:document_list' %}">查看全部文档</a>
+</p>
+
+
+{% endblock %}
+

@@ -1,0 +1,35 @@
+{% extends "smartdoc/base.html" %}
+
+{% block content %}
+
+<form action="" method="post" enctype="multipart/form-data" >
+  {% csrf_token %}
+
+  {% for hidden_field in form.hidden_fields %}
+  {{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+      {{ error }}
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% for field in form.visible_fields %}
+  <div class="form-group">
+    {{ field.label_tag }}
+    {{ field }}
+    {% if field.help_text %}
+      <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+  </div>
+{% endfor %}
+
+
+ <button class="btn btn-info form-control " type="submit" value="submit">提交</button>
+</form>
+<br />
+<p><span class="glyphicon glyphicon-plus"></span> <a href="{% url 'smartdoc:category_create' %}">添加类别</a></p>
+{% endblock %}

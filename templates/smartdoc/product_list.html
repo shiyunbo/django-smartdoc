@@ -1,0 +1,67 @@
+{% extends "smartdoc/base.html" %}
+
+{% block content %}
+
+
+<h3>全部产品列表</h3>
+
+{% if product_list %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>代码</th>
+            <th>产品名称</th>
+            <th>修改日期</th>
+            <th>文档数</th>
+            <th>作者</th>
+            <th>查看</th>
+        </tr>
+    </thead>
+    <tbody>
+     {% for product in product_list %}
+        <tr>
+            <td>
+            {{ product.code }}
+            </td>
+            <td>
+            {{ product.name }}
+            </td>
+              <td>
+            {{ product.mod_date | date:"Y-m-d" }}
+            </td>
+               <td>
+            {{ product.document_count }}
+            </td>
+             <td>
+            {{ product.author.username }}
+            </td>
+             <td>
+                 <a href="{% url 'smartdoc:product_detail' product.id %}"><span class="glyphicon glyphicon-eye-open"></span></a>
+            </td>
+
+     {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<p>对不起，没有产品。</p>
+{% endif %}
+
+
+ {% if request.user.is_authenticated %}
+<p><span class="glyphicon glyphicon-plus"></span> <a href="{% url 'smartdoc:product_create' %}">添加产品</a></p>
+ {% else %}
+
+<p>请<a href="{% url 'account_login' %}?next={% url 'smartdoc:product_create' %}">登录</a>后添加产品。</p>
+  {% endif %}
+
+<p><a href="{% url 'smartdoc:product_list' %}">查看全部产品</a> | <a href="{% url 'smartdoc:category_list' %}">查看全部类别</a>
+| <a href="{% url 'smartdoc:document_list' %}">查看全部文档</a>
+</p>
+
+
+{% endblock %}
+
+
+
+

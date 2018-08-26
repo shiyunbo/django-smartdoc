@@ -1,0 +1,61 @@
+{% extends "smartdoc/base.html" %}
+
+{% block content %}
+<h3>所有文档类别</h3>
+
+{% if category_list %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>文档类别</th>
+            <th>文档总数</th>
+            <th>最后修改</th>
+            <th>作者</th>
+            <th>详情</th>
+        </tr>
+    </thead>
+    <tbody>
+     {% for category in category_list %}
+        <tr>
+            <td>
+            {{ category.name }}
+            </td>
+              <td>
+            {{ category.document_count }}
+            </td>
+              <td>
+            {{ category.mod_date | date:"Y-m-d" }}
+            </td>
+             <td>
+            {{ category.author.username }}
+            </td>
+
+             <td>
+                 <a href="{% url 'smartdoc:category_detail' category.id %}"><span class="glyphicon glyphicon-eye-open"></span></a>
+            </td>
+
+     {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<p>对不起，没有类别。</p>
+{% endif %}
+
+
+ {% if request.user.is_authenticated %}
+<p><span class="glyphicon glyphicon-plus"></span> <a href="{% url 'smartdoc:category_create' %}">添加类别</a></p>
+ {% else %}
+
+<p>请<a href="{% url 'account_login' %}?next={% url 'smartdoc:category_create' %}">登录</a>后添加类别。</p>
+  {% endif %}
+
+<p><a href="{% url 'smartdoc:product_list' %}">查看全部产品</a> | <a href="{% url 'smartdoc:category_list' %}">查看全部类别</a>
+| <a href="{% url 'smartdoc:document_list' %}">查看全部文档</a>
+</p>
+
+{% endblock %}
+
+
+
+

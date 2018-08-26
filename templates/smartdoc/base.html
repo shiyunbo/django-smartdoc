@@ -1,0 +1,104 @@
+{% load static %}
+
+<html lang="en">
+<head>
+<title>{% block title %}Django文档管理{% endblock %} </title>
+<meta charset="utf-8">
+<meta name="keywords" content="{% block keywords %} some keywords{% endblock %} ">
+<meta name="description" content="{% block description %} Django web application example.{% endblock %}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'myrestaurants/custom.css' %}">
+
+
+</head>
+
+<body class="bs-docs-home">
+
+<nav class="navbar navbar-inverse navbar-static-top bs-docs-nav">
+
+  <div class="container">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>                        
+      </button>
+        <a class="navbar-brand" href="{% url 'smartdoc:document_list' %}"><strong>Django文档管理smartdoc</strong></a>
+
+     </div>
+
+      <div class="collapse navbar-collapse" id="myNavbar">
+
+       <ul class="nav navbar-nav navbar-right">
+		 {% if request.user.is_authenticated %}
+
+          <li class="dropdown">
+              <a class="dropdown-toggle btn-green" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span>  {{ request.user.username }} <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a  href="{% url 'myaccount:profile' %}">我的账户</a></li>
+              <li><a  href="{% url 'account_logout' %}">退出登录</a></li>
+            </ul>
+          </li>  
+         {% else %}		  
+            <li class="dropdown"><a class="dropdown-toggle btn-green" href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-user"></span> 注册</a></li>
+			<li class="dropdown"><a class="dropdown-toggle" href="{% url 'account_login' %}" ><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+		 {% endif %}
+       </ul>
+
+    </div>
+
+  </div>
+</nav>    
+
+ <!-- Page content of course! -->
+<main id="section1" class="container-fluid">
+ 
+<div class="container">
+  <div class="row">
+
+
+
+ <div class="col-sm-12">
+ 	<div class="wrapper">
+        <div class="newsbox">
+             <div class="container1">
+	       
+
+ {% block content %}
+  {% if error_message %}<p><strong>{{ error_message}}</strong></p>{% endif %}
+  {% endblock %}
+
+
+        </div>
+		</div>
+	</div>
+</div>
+
+
+</div>
+    
+
+</div> 
+</main>
+
+
+<footer class="footer">
+  {% block footer %}{% endblock %}
+</footer>
+<!--End of Footer-->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+{% block js %}{% endblock %}
+
+
+</body>
+</html>
+
+

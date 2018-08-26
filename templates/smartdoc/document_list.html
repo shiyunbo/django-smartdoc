@@ -1,0 +1,97 @@
+{% extends "smartdoc/base.html" %}
+
+{% block content %}
+<h3>文档列表</h3>
+
+
+<form action="{% url 'smartdoc:document_search' %}" role="search" method="get">
+    {% csrf_token %}
+    <div class="input-group col-md-12">
+        <input type="text" name="q" id="q" class="form-control" placeholder="搜索产品名称，代码或文档标题">
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="submit" value="submit">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </span>
+        </div>
+</form>
+
+
+{% if document_list %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>标题</th>
+            <th>产品</th>
+            <th>类别</th>
+             <th>格式</th>
+             <th>大小</th>
+            <th>修改日期</th>
+            <th>版本</th>
+            <th>查看</th>
+            <th>下载</th>
+        </tr>
+    </thead>
+    <tbody>
+     {% for document in document_list %}
+        <tr>
+            <td>
+            {{ document.title }}
+            </td>
+            <td>
+            {{ document.product.name }}
+            </td>
+            <td>
+            {{ document.category.name }}
+            </td>
+             <td>
+            {{ document.get_format }}
+            </td>
+             <td>
+            {{ document.doc_file.size | filesizeformat }}
+            </td>
+              <td>
+            {{ document.mod_date | date:"Y-m-d" }}
+            </td>
+
+               <td>
+            {{ document.version_no }}
+            </td>
+             <td>
+                 <a href="{% url 'smartdoc:document_detail' document.product.id document.id %}"><span class="glyphicon glyphicon-eye-open"></span></a>
+            </td>
+
+
+             <td>
+                <a href="{{ document.doc_file.url }}"><span class="glyphicon glyphicon-download"></span></a>
+            </td>
+
+
+     {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<p>对不起，没有文档。</p>
+{% endif %}
+
+
+ {% if request.user.is_authenticated %}
+<p><span class="glyphicon glyphicon-plus"></span>请先<a href="{% url 'smartdoc:product_list' %}">选择产品</a>再上传文档。</p>
+ {% else %}
+
+<p>请<a href="{% url 'account_login' %}?next={% url 'smartdoc:product_list' %}">登录</a>后先创建或选择产品后，再上传文档。</p>
+  {% endif %}
+
+
+<p><a href="{% url 'smartdoc:product_list' %}">查看全部产品</a> | <a href="{% url 'smartdoc:category_list' %}">查看全部类别</a>
+| <a href="{% url 'smartdoc:document_list' %}">查看全部文档</a>
+</p>
+
+{% endblock %}
+
+
+
+
+
+
